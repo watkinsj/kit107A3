@@ -1,0 +1,38 @@
+
+
+generate a new level:
+
+given	variable t is gameTree
+		variable k is a stack of tNodes
+
+get tNode from top of stack call it parent_tnode
+get gamestate from parent patent_tnode call it parent_game_state
+
+
+figure out if a new level is valid etc:
+	create new game state with derive
+	create tNode from game state
+		data is -> gamestate
+		level is current level + 1 
+	set gamestates parent to parent_tnode
+	if first run
+		set parent_tnode shild to new tnode
+	if > first
+		set tnode from before to sinling to new tnode
+
+
+
+
+
+	The algorythm i want:
+
+		get a game tree from the stack
+
+		generate levels for that game tree
+
+			add all siblings etc for that level to the stack
+
+		if the game tree is deep enough end
+		
+		otherwise
+			repeat until
