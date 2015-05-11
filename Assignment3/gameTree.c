@@ -349,10 +349,9 @@ void generateLevelDF(gameTree t, stack k)
 	trace("generateLevelDF: generateLevelDF starts");
 
 	gameTree *current_gameTree;
-	gameState parent_gameState, current_gameState, previous_gameState;
+	gameTree previous_gameTree;
+	gameState parent_gameState, current_gameState;
 	bool no_siblings = true;
-
-	printf("------------------------------------------------------------------\n");
 
 	//parent_tNode = (tNode)getData(t);
 	parent_gameState = (gameState)(getData(t));
@@ -362,7 +361,7 @@ void generateLevelDF(gameTree t, stack k)
 	cur_c = getColumn(parent_gameState);
 
 	trace("generateLevelDF:showing parent_gameState:");
-	showGameState(parent_gameState);
+	//showGameState(parent_gameState);
 
 	//generate possible moves
 	for (test_move = 0; test_move < MOVE_COUNT; test_move++)
@@ -390,8 +389,7 @@ void generateLevelDF(gameTree t, stack k)
 				init_gameTree(current_gameTree, false, current_gameState, getLevel(t) + 1);
 
 				//set parents siblings etc
-				//setTNParent(*current_tNode, parent_tNode);
-				setParent(current_gameTree,t);
+				setParent(*current_gameTree,t);
 				
 				if (no_siblings)
 				{
@@ -401,14 +399,14 @@ void generateLevelDF(gameTree t, stack k)
 				}
 				else
 				{
-					//setTNSibling(*leftSibTnode, *current_tNode);
-					//setSibling(*current_gameTree,)					////this needs work!!!!!!!
+					setSibling(previous_gameTree, current_gameTree);
 				}
 
 				//add game tree to stack
 				push(k, *current_gameTree);
+				previous_gameTree = *current_gameTree;
 				trace("generateLevelDF:showing new_gameState:");
-				showGameState(current_gameState);
+				//showGameState(current_gameState);
 			}
 		}
 	}
@@ -447,14 +445,27 @@ gameTree buildGameDF(gameTree t, stack k, int d)
 
 	init_gameTree(&c, true, NULL, -1);	//allocate enough memory for c to hold a game tree
 
+	c = t;
+
 	push(k, t);
 
-	do		//this will need another condion to check if search depth is found
+	while ((!(isEmptyS(k))) && (getLevel(c)<TOUR_LENGTH))
 	{
-		c = (gameTree)(top(k));
 		pop(k);
 		generateLevelDF(c, k);
-	} while (!(isEmptyS(k)));
+		if (!(isEmptyS(k)))
+		{
+			c = (gameTree)(top(k));
+		}
+	} 
+
+	if (getLevel(c) < TOUR_LENGTH)
+	{
+		//no solution found
+		init_gameTree(&c, true, NULL, NULL);
+	}
+	
+	return c;
 
 	trace("buildGameDF: buildGameDF ends");
 }
