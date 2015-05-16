@@ -13,7 +13,7 @@
  *	YOU NEED TO MAKE CHANGES TO THIS FILE!
 */
 
-
+//include statements
 #include <stdbool.h>
 #include "tNode.h"
 #include "gameTree.h"
@@ -22,7 +22,13 @@
 #include <stdio.h>
 #include <math.h>
 
-
+/*
+* gameTree_int struct
+*
+* internal structure for gameTree
+* gameTree pointer points to this struct. Data types as below:
+*
+*/
 struct gameTree_int
 {
 	tNode root;			// the node at the top of the tree
@@ -43,7 +49,7 @@ struct gameTree_int
 */
 void init_gameTree(gameTree *tp,bool e,void *o,int l)
 {
-	trace("GameTree: initialiser starts");
+	trace("GameTree: initialiser starts");	//for debug purposes only. function in assig_three115.c
 	
     //allocate memory
     *tp = (gameTree)malloc(sizeof(struct gameTree_int));
@@ -51,16 +57,16 @@ void init_gameTree(gameTree *tp,bool e,void *o,int l)
     //check what verson of instanciator to use
     if (e)
     {
-        //top of tree
+        //caller of function wants root data field set to NULL, ignore other inputs
         (*tp)->root = NULL;
     }
     else
     {
-        //not top of tree
+        //caller of function wants root data field (tNode) instanciated and have values passes into this function
         init_TNode(&((*tp)->root), o, l);
     }
 
-	trace("GameTree: initialiser ends");
+	trace("GameTree: initialiser ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -76,8 +82,9 @@ void init_gameTree(gameTree *tp,bool e,void *o,int l)
 */
 bool isEmptyGT(gameTree t)
 {
-//COMPLETE ME!                                                          //not sure why this needs editing???????????
+	trace("GameTree: isEmptyGT starts and finises");		//for debug purposes only. function in assig_three115.c
 
+	//fetch root data field, if NULL return true
 	return (t->root == NULL);
 }
 
@@ -94,11 +101,12 @@ bool isEmptyGT(gameTree t)
 */
 void *getData(gameTree t)
 {
-	trace("getData: getData starts");
-		
+	trace("getData: getData starts");	//for debug purposes only. function in assig_three115.c
+	
+	//fetch and return root data field
 	return getTNData(t->root);
 
-	trace("getData: getData ends");
+	trace("getData: getData ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -114,11 +122,12 @@ void *getData(gameTree t)
 */
 int getLevel(gameTree t)
 {
-	trace("getLevel: getLevel starts");
-		
+	trace("getLevel: getLevel starts");	//for debug purposes only. function in assig_three115.c
+
+	//fetch root datafield and use tNode function to get level, and return this	
 	return getTNLevel(t->root);
 
-	trace("getLevel: getLevel ends");
+	trace("getLevel: getLevel ends");	//for debug purposes only. function in assig_three115.c
 }	
 	
 
@@ -135,7 +144,8 @@ int getLevel(gameTree t)
 */
 gameTree getParent(gameTree t)
 {
-	gameTree p;
+																			//check if this was completed by julian. if not comment
+	gameTree p;	
 
 	trace("getParent: getParent starts");
 
@@ -166,6 +176,7 @@ gameTree getParent(gameTree t)
 */
 gameTree getChild(gameTree t)
 {
+																				//check if compelted by julian, if not comment
 	gameTree c;
 
 	trace("getChild: getChild starts");
@@ -199,7 +210,7 @@ gameTree getChild(gameTree t)
 gameTree getSibling(gameTree t) 
 {
 	gameTree s;
-		
+																								//check if this was completed by julian, if not comment
 	trace("getSibling: getSibling starts");
 		
 	if (isEmptyGT(t))
@@ -230,11 +241,12 @@ gameTree getSibling(gameTree t)
 */
 void setData(gameTree t,void *o)
 {
-	trace("setData: setData starts");
-		
+	trace("setData: setData starts");	//for debug purposes only. function in assig_three115.c
+	
+	//set roots datafield (type tNode's data field) using tNode function
 	setTNData(t->root, o);
 
-	trace("setData: setData ends");
+	trace("setData: setData ends");	//for debug purposes only. function in assig_three115.c
 }
 		
 	
@@ -251,11 +263,12 @@ void setData(gameTree t,void *o)
 */
 void setLevel(gameTree t,int l)
 {
-	trace("setLevel: setLevel starts");
-		
-	setTNLevel((tNode)(t->root), l);
+	trace("setLevel: setLevel starts");	//for debug purposes only. function in assig_three115.c
+	
+	//set roots datafield (type tNode's level datafield) using tNode fuction
+	setTNLevel(t->root, l);
 
-	trace("setLevel: setLevel ends");
+	trace("setLevel: setLevel ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -272,11 +285,12 @@ void setLevel(gameTree t,int l)
 */
 void setParent(gameTree t, gameTree p)
 {
-	trace("setParent: setParent starts");
+	trace("setParent: setParent starts");	//for debug purposes only. function in assig_three115.c
 
-	setTNParent((tNode)(t->root), (tNode)(p->root));
+	//using tNode fuctions set ts parent field to p
+	setTNParent(t->root, p->root);
 
-	trace("setParent: setParent ends");
+	trace("setParent: setParent ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -293,11 +307,12 @@ void setParent(gameTree t, gameTree p)
 */
 void setChild(gameTree t, gameTree c)
 {
-	trace("setChild: setChild starts");
+	trace("setChild: setChild starts");	//for debug purposes only. function in assig_three115.c
 
-	setTNChild((tNode)(t->root), (tNode)(c->root));
+	//using tNode fuctions set ts child field to c
+	setTNChild(t->root, c->root);
 
-	trace("setChild: setChild ends");
+	trace("setChild: setChild ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -314,11 +329,12 @@ void setChild(gameTree t, gameTree c)
 */
 void setSibling(gameTree t,gameTree s)
 {
-	trace("setSibling: setSibling starts");
-		
-	setTNSibling((tNode)(t->root), (tNode)(s->root));
+	trace("setSibling: setSibling starts");	//for debug purposes only. function in assig_three115.c
+	
+	//using tNode functions set ts sibling to s
+	setTNSibling(t->root, s->root);
 
-	trace("setSibling: setSibling ends");
+	trace("setSibling: setSibling ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -342,76 +358,89 @@ void generateLevelDF(gameTree t, stack k)
 	const int VERT_MOVES[] =  { -1, -2, -2, -1, +1, +2, +2, +1 };	// moves up/down
 	const int MOVE_COUNT = 8;										// number of potential moves
 
+	const int START_OF_ARRAY = 0;	//first element of an array
+
 	int cur_r, cur_c;	//current row and current column
 	int new_r, new_c;	//updated to new row and column possiblitites
-	int test_move;
-
-	trace("generateLevelDF: generateLevelDF starts");
-
+	int test_move;	//used in for loop to step through possible moves
 	gameTree *current_gameTree;
 	gameTree previous_gameTree;
 	gameState parent_gameState, current_gameState;
 	bool no_siblings = true;
+	int new_level;	//updated to be the level of children generated relative to root of tree
 
-	//parent_tNode = (tNode)getData(t);
+	trace("generateLevelDF: generateLevelDF starts");	//for debug purposes only. function in assig_three115.c
+	
+	//fetch game state to generate children out of gameTree passed in and generate the level of children
 	parent_gameState = (gameState)(getData(t));
+	new_level = getLevel(t);
+	new_level++;
 
-	//update current row & col.
+	//update current row & col to location of knight
 	cur_r = getRow(parent_gameState);
 	cur_c = getColumn(parent_gameState);
 
-	trace("generateLevelDF:showing parent_gameState:");
-	//showGameState(parent_gameState);
+	trace("generateLevelDF:showing parent_gameState:");	//for debug purposes only. function in assig_three115.c
 
-	//generate possible moves
-	for (test_move = 0; test_move < MOVE_COUNT; test_move++)
+	//loop though every possible move
+	for (test_move = START_OF_ARRAY; test_move < MOVE_COUNT; test_move++)
 	{
-		//update new location
+		//update new location to where knight could theoretically move (before considering its validity)
 		new_r = cur_r + VERT_MOVES[test_move];
 		new_c = cur_c + HORIZ_MOVES[test_move];
 
 		//test to see if new location is legal & valid
-
 		if (valid(parent_gameState, new_r, new_c))
 		{
 			//play is on the board
-			trace("gernateLevelDF: new location on board");
+			trace("gernateLevelDF: new location on board");	//for debug purposes only. function in assig_three115.c
 			if (!taken(parent_gameState, new_r, new_c))
 			{
-				//dirive the new game state
-				current_gameState = derive(parent_gameState, new_r, new_c, getLevel(t)+1);
+				//the knight has not visited this location before, thus move is valid and legal
+
+				//dirive the new game state based on the gameTree passed in.
+				current_gameState = derive(parent_gameState, new_r, new_c, new_level);
 				
-				//current_tNode = malloc(sizeof(tNode));
-				//init_TNode(current_tNode, current_gameState, getLevel(t) + 1);
-
 				//create a game tree containing the new gamestate
-				current_gameTree = malloc(sizeof(gameTree));	//creates new space for pointer
-				init_gameTree(current_gameTree, false, current_gameState, getLevel(t) + 1);
+				current_gameTree = malloc(sizeof(gameTree));	//creates new space in memory for pointer
+				init_gameTree(current_gameTree, false, current_gameState, new_level);
 
-				//set parents siblings etc
+				//set parent, sibling & children
+
+				//the new game tree just created parent will always be the game tree passsed if
 				setParent(*current_gameTree,t);
 				
+				//if this is the first child generated from this parent it is unsure if it will have siblings
+				//given the way this tree works the left most child is the the only child reffered to in parents child data field
 				if (no_siblings)
 				{
-					//setTNChild(parent_tNode, *current_tNode);
-					setChild(t, current_gameTree);
-					no_siblings = false;
+					//first child generated
+
+					//set the parents child
+					setChild(t, *current_gameTree);
+
+					no_siblings = false;	//stops future loops from entering this section of code
 				}
 				else
 				{
-					setSibling(previous_gameTree, current_gameTree);
+					//not the first child generated
+
+					//previous tree generated sibling is the current tree, update to represent this
+					setSibling(previous_gameTree, *current_gameTree);
 				}
 
-				//add game tree to stack
+				//add game tree to stack to be processed in the future
 				push(k, *current_gameTree);
+				
+				//change name of current game tree to previous game tree for future loops
 				previous_gameTree = *current_gameTree;
-				trace("generateLevelDF:showing new_gameState:");
-				//showGameState(current_gameState);
+
+				trace("generateLevelDF:showing new_gameState:");	//for debug purposes only. function in assig_three115.c
 			}
 		}
 	}
 
-	trace("generateLevelDF: generateLevelDF ends");
+	trace("generateLevelDF: generateLevelDF ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -439,35 +468,47 @@ void generateLevelDF(gameTree t, stack k)
 */
 gameTree buildGameDF(gameTree t, stack k, int d)
 {
-	gameTree c;
+	gameTree c;	//updated through loop to current gameTree to be worked on
 
-	trace("buildGameDF: buildGameDF starts");
+	trace("buildGameDF: buildGameDF starts");	//for debug purposes only. function in assig_three115.c
 
 	init_gameTree(&c, true, NULL, -1);	//allocate enough memory for c to hold a game tree
 
-	c = t;
+	c = t;	//initialy work on the game tree passed in
 
+	//so that we dont pop an empty stack add the first tree the stack
 	push(k, t);
 
+	//generate children from the gameTree at the top of the stack then add those children to the stack
+	//continue to do this until either:
+	//			the stack is empty (meaning no more children can be generated (likely no solution can be found))
+	//			enought moves have been generated to find a solution.
 	while ((!(isEmptyS(k))) && (getLevel(c)<TOUR_LENGTH))
 	{
+		//remove last gameTree from top of stack
 		pop(k);
+		
+		//generate children and add them to stack
 		generateLevelDF(c, k);
+
+		//update c to the top of the stack
 		if (!(isEmptyS(k)))
 		{
 			c = (gameTree)(top(k));
 		}
 	} 
 
+	//check if a solution has been found.
 	if (getLevel(c) < TOUR_LENGTH)
 	{
-		//no solution found
-		init_gameTree(&c, true, NULL, NULL);
+		//no solution found so update c to have a NULL data field
+		init_gameTree(&c, true, NULL, -1);
 	}
 	
-	return c;
+	trace("buildGameDF: buildGameDF ends");	//for debug purposes only. function in assig_three115.c
 
-	trace("buildGameDF: buildGameDF ends");
+	//returns leaf node of tree containing full solution or NULL value if no solutuon (of type gameTree)
+	return c;
 }
 
 
@@ -547,6 +588,8 @@ gameTree buildGameBF(gameTree t, queue q, int d)
 */
 char *toStringGT(gameTree t)
 {
+	//created by JD so not commented
+
 	gameTree c;
 	char *s;
 

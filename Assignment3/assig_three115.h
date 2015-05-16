@@ -15,7 +15,7 @@
 
 #define TRACING false
 #define DIMENSION 4
-#define TOUR_LENGTH 16
+#define TOUR_LENGTH 15
 
 void trace(char *s);
 

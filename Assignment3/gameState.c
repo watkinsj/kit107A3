@@ -11,18 +11,22 @@
 *	YOU NEED TO MAKE CHANGES TO THIS FILE!
 */
 
-
+//include statements
 #include <stdbool.h>
 #include "assig_three115.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "gameState.h"
 
-
+/*
+ * gameState_int struct
+ * internal structure for gameState.
+ * data fields as per comments below
+ */
 struct gameState_int {
 	int row;							// knight's current row position
 	int column;							// knight's current column
-	int board[DIMENSION][DIMENSION];	// board of move numbers
+	int board[DIMENSION][DIMENSION];	// board of move numbers as 2d matrix
 };
 
 
@@ -44,29 +48,33 @@ struct gameState_int {
 */
 void init_gameState(gameState *sp, int r, int c)
 {
-	int x, y;   //used in for loop to traverse across board to set values to 0
+	const int SPACE_EMPTY = 0;	//represents a location on board[][] that has not been visited
+	const int START_OF_ARRAY = 0;	//represents the lowest possible location in an array
 
-	trace("init_gameState: init_gameState starts");
+	int x, y;   //used in for loop to traverse across board
+
+	trace("init_gameState: init_gameState starts");	//for debug purposes only. function in assig_three115.c
     
+	//allocate memory
     *sp = (gameState)malloc(sizeof(struct gameState_int));
     
-    //loops through x & y setting entire board to 0
-    for (x = 0; x<DIMENSION; x++)
+    //loops through x & y setting entire board matrix to empty
+    for (x = START_OF_ARRAY; x<DIMENSION; x++)
     {
-        for (y=0; y<DIMENSION; y++)
+        for (y= START_OF_ARRAY; y<DIMENSION; y++)
         {
-            (*sp)->board[x][y] = 0;
+            (*sp)->board[x][y] = SPACE_EMPTY;
         }
     }
     
     //update location of knight
     (*sp)->board[r-1][c-1] = 1;
     
-    //update row and column values to represent those passed in.
+    //update row and column datafields to represent those passed in.
     (*sp)->row = r;
     (*sp)->column = c;
 
-	trace("init_gameState: init_gameState ends");
+	trace("init_gameState: init_gameState ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -82,9 +90,10 @@ void init_gameState(gameState *sp, int r, int c)
 */
 int getRow(gameState s)
 {
-	trace("getRow: getRow starts and finishes");
+	trace("getRow: getRow starts and finishes");	//for debug purposes only. function in assig_three115.c
 
-    return s->row;
+	//fetch and return row data field
+    return (s->row);
 }
 
 
@@ -100,9 +109,10 @@ int getRow(gameState s)
 */
 int getColumn(gameState s)
 {
-	trace("getColumn: getColumn starts and finishes");
+	trace("getColumn: getColumn starts and finishes");	//for debug purposes only. function in assig_three115.c
 
-    return s->column;
+	//fetch and return column data field
+    return (s->column);
 }
 
 
@@ -120,11 +130,12 @@ int getColumn(gameState s)
 */
 void setRow(gameState s, int r)
 {
-	trace("setRow: setRow starts");
+	trace("setRow: setRow starts");	//for debug purposes only. function in assig_three115.c
 
+	//update row data field
 	s->row = r;
 
-	trace("setRow: setRow ends");
+	trace("setRow: setRow ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -142,11 +153,12 @@ void setRow(gameState s, int r)
 */
 void setColumn(gameState s, int c)
 {
-	trace("setColumn: setColumn starts");
+	trace("setColumn: setColumn starts");	//for debug purposes only. function in assig_three115.c
 
+	//update column data field
 	s->column = c;
 
-	trace("setColumn: setColumn ends");
+	trace("setColumn: setColumn ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -164,7 +176,7 @@ void setColumn(gameState s, int c)
 */
 bool valid(gameState s, int r, int c)
 {
-	trace("valid: valid starts and finishes");
+	trace("valid: valid starts and finishes");		//for debug purposes only. function in assig_three115.c
 	
 	const int ZERO = 0;	//must use a number that is within bounds of array to get size (zero always works)
 						//0 is also lower than all row and column values (i.e 1,1 is top left corner)
@@ -172,9 +184,11 @@ bool valid(gameState s, int r, int c)
 	int x, y;	//will contain the width and hight of array respectivly
 
 	//set x and y to the dimentions of the array board (= size of board).
+		//takes into consideration that board may not be square
 	x = sizeof(s->board) / sizeof(s->board[ZERO]);
 	y = sizeof(s->board[ZERO]) / sizeof(s->board[ZERO][ZERO]);
 
+	//compare r,c to board dimentions (taking into consideration that r,c could be 0 or below)
 	if ((r <= y) && (r>ZERO) && (c <= x) && (c>ZERO))
 	{
 		//c,r is on the board
@@ -203,9 +217,13 @@ bool valid(gameState s, int r, int c)
 */
 bool taken(gameState s, int r, int c)
 {
-	//trace("taken: taken starts and finishes");
+	const int SPACE_EMPTY = 0;	//represents a location on board[][] that has not been visited
+	const int DIFFERENCE_ARRAY_VS_RC = 1;	//difference between row & column values vs positions in board array 
 
-	return (s->board[r-1][c-1]!=0);
+	trace("taken: taken starts and finishes");	//for debug purposes only. function in assig_three115.c
+
+	//fetch location on board and reurn true if space is not empty
+	return (s->board[r-DIFFERENCE_ARRAY_VS_RC][c-DIFFERENCE_ARRAY_VS_RC]!= SPACE_EMPTY);
 }
 
 
@@ -228,31 +246,38 @@ bool taken(gameState s, int r, int c)
 */
 gameState derive(gameState s, int r, int c, int m)
 {
-	gameState n;
-	int x, y;
+	const int SPACE_EMPTY = 0;	//represents a location on board[][] that has not been visited
+	const int DIFFERENCE_ARRAY_VS_RC = 1;	//difference between row & column values vs positions in board array 
+	const int START_OF_ARRAY = 0;	//represents the lowest possible location in an array
 
-	trace("derive: derive starts");
+	gameState n;	//new game state to be updates and then returned
+	int x, y;	//used in for loop to traverse across board
 
-	// create a new the game state
+	trace("derive: derive starts");	//for debug purposes only. function in assig_three115.c
+
+	// instanciate a new gameState state given inputs
 	init_gameState(&n, r, c);
 
 	// add the new move
-	n->board[r-1][c-1] = m;
+	n->board[r-DIFFERENCE_ARRAY_VS_RC][c-DIFFERENCE_ARRAY_VS_RC] = m;
 
 	// duplicate the existing moves
-	for (x = 0; x < DIMENSION; x++)
+	for (x = START_OF_ARRAY; x < DIMENSION; x++)
 	{
-		for (y = 0; y < DIMENSION; y++)
+		for (y = START_OF_ARRAY; y < DIMENSION; y++)
 		{
-			if (s->board[x][y] != 0)
+			//determine if the space has been played on previously
+			if (s->board[x][y] != SPACE_EMPTY)
 			{
+				//update the current location on board to previous move location
 				n->board[x][y] = s->board[x][y];
 			}
 		}
 	}
 
-	trace("derive: derive ends");
+	trace("derive: derive ends");	//for debug purposes only. function in assig_three115.c
 
+	//return new board
 	return n;
 }
 
@@ -267,6 +292,8 @@ gameState derive(gameState s, int r, int c, int m)
 */
 void showGameState(gameState s)
 {
+	//given in solution so not updated
+
 	int x, y;
 
 	trace("showGameState: showGameState starts");

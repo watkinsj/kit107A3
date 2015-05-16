@@ -13,14 +13,21 @@
  *	YOU NEED TO MAKE CHANGES TO THIS FILE!
  */
 
-
+//include statements
 #include <stdbool.h>
 #include "assig_three115.h"
 #include "tNode.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-//types
+/*
+ * tNode_int struct
+ * 
+ * internal structure for tNode 
+ * tNode pointer points to this struct. Data types as below:
+ * 
+ */
+
 struct tNode_int
 {
 	void *data;		// the value stored in the node
@@ -49,18 +56,22 @@ struct tNode_int
 */
 void init_TNode(tNode *tp, void *o, int l)
 {
-    trace("TNode: Initialiser starts");
+    trace("TNode: Initialiser starts");	//for debug purposes only. function in assig_three115.c
 
 	//allocate memory
 	*tp = (tNode)malloc(sizeof(struct tNode_int));
 
+	//store values in data fields
 	(*tp)->data = o;
 	(*tp)->level = l;
+
+	//refrences to other neighbours in tree
+	//set to NULL initially and then can be set to tNodes later
 	(*tp)->parent = NULL;
 	(*tp)->child = NULL;
 	(*tp)->sibling = NULL;
 
-    trace("TNode: Initialiser ends");
+    trace("TNode: Initialiser ends"); //for debug purposes only. function in assig_three115.c
 }
 
 
@@ -77,11 +88,12 @@ void init_TNode(tNode *tp, void *o, int l)
 */
 void setTNData(tNode t,void *o)
 {
-    trace("setTNData: setTNData starts");
+    trace("setTNData: setTNData starts");	//for debug purposes only. function in assig_three115.c
 
+	//update data field
 	t->data = o;
 
-    trace("setTNData: setTNData ends");
+    trace("setTNData: setTNData ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -98,11 +110,12 @@ void setTNData(tNode t,void *o)
 */
 void setTNLevel(tNode t,int l)
 {
-    trace("setTNLevel: setTNLevel starts");
+    trace("setTNLevel: setTNLevel starts");	//for debug purposes only. function in assig_three115.c
 
+	//update data field
 	t->level = l;
 
-    trace("setTNLevel: setTNLevel ends");
+    trace("setTNLevel: setTNLevel ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -119,11 +132,12 @@ void setTNLevel(tNode t,int l)
 */
 void setTNChild(tNode t,tNode n)
 {
-    trace("setTNChild: setTNChild starts");
+    trace("setTNChild: setTNChild starts");	//for debug purposes only. function in assig_three115.c
 
+	//update data field
 	t->child = n;
 
-    trace("setTNChild: setTNChild ends");
+    trace("setTNChild: setTNChild ends");	//for debug purposes only. function in assig_three115.c
 }
 	
 	
@@ -140,11 +154,12 @@ void setTNChild(tNode t,tNode n)
 */
 void setTNSibling(tNode t, tNode n)
 {
-	trace("setTNSibling: setTNSibling starts");
+	trace("setTNSibling: setTNSibling starts");	//for debug purposes only. function in assig_three115.c
 
+	//update data field
 	t->sibling = n;
 
-	trace("setTNSibling: setTNSibling ends");
+	trace("setTNSibling: setTNSibling ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -161,11 +176,12 @@ void setTNSibling(tNode t, tNode n)
 */
 void setTNParent(tNode t, tNode n)
 {
-	trace("setTNParent: setTNParent starts");
+	trace("setTNParent: setTNParent starts");	//for debug purposes only. function in assig_three115.c
 
+	//update data field
 	t->parent = n;
 
-	trace("setTNParent: setTNParent ends");
+	trace("setTNParent: setTNParent ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -181,8 +197,9 @@ void setTNParent(tNode t, tNode n)
 */
 void *getTNData(tNode t)
 {
-    trace("getTNData: getTNData starts and ends");
+    trace("getTNData: getTNData starts and ends"); //for debug purposes only. function in assig_three115.c
 
+	//fetch and return pointer to data
 	return (t->data);
 }
 	
@@ -200,9 +217,10 @@ void *getTNData(tNode t)
 */
 int getTNLevel(tNode t)
 {
-    trace("getTNLevel: getTNLevel starts and ends");
+    trace("getTNLevel: getTNLevel starts and ends"); //for debug purposes only. function in assig_three115.c
 
-	return t->level;
+	//fetch and return level data field
+	return (t->level);
 }
 	
 	
@@ -219,9 +237,10 @@ int getTNLevel(tNode t)
 */
 tNode getTNChild(tNode t)
 {
-    trace("getTNChild: getTNChild starts and ends");
+    trace("getTNChild: getTNChild starts and ends"); //for debug purposes only. function in assig_three115.c
 
-	return t->child;
+	//fetch and return child data field
+	return (t->child);
 }
 	
 	
@@ -238,9 +257,10 @@ tNode getTNChild(tNode t)
 */
 tNode getTNSibling(tNode t)
 {
-	trace("getTNSibling: getTNSibling starts and ends");
+	trace("getTNSibling: getTNSibling starts and ends");	//for debug purposes only. function in assig_three115.c
 
-	return t->sibling;
+	//fetch and return sibling data field
+	return (t->sibling);
 }
 
 
@@ -257,7 +277,8 @@ tNode getTNSibling(tNode t)
 */
 tNode getTNParent(tNode t)
 {
-	trace("getTNParent: getTNParent starts and ends");
+	trace("getTNParent: getTNParent starts and ends");	//for debug purposes only. function in assig_three115.c
 
-	return t->parent;
+	//fetch and return parent data field
+	return (t->parent);
 }
