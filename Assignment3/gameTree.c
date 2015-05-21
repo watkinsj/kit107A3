@@ -361,8 +361,10 @@ void generateLevelDF(gameTree t, stack k)
 	const int START_OF_ARRAY = 0;	//first element of an array
 
 	int cur_r, cur_c;	//current row and current column
-	int new_r, new_c;	//updated to new row and column possiblitites
+	int new_r, new_c;	//updated to new row and column possiblities
 	int test_move;	//used in for loop to step through possible moves
+	int step;
+	step = 0;
 	gameTree *current_gameTree;
 	gameTree previous_gameTree;
 	gameState parent_gameState, current_gameState;
@@ -393,7 +395,7 @@ void generateLevelDF(gameTree t, stack k)
 		if (valid(parent_gameState, new_r, new_c))
 		{
 			//play is on the board
-			trace("gernateLevelDF: new location on board");	//for debug purposes only. function in assig_three115.c
+			trace("generateLevelDF: new location on board");	//for debug purposes only. function in assig_three115.c
 			if (!taken(parent_gameState, new_r, new_c))
 			{
 				//the knight has not visited this location before, thus move is valid and legal
@@ -428,7 +430,6 @@ void generateLevelDF(gameTree t, stack k)
 					//previous tree generated sibling is the current tree, update to represent this
 					setSibling(previous_gameTree, *current_gameTree);
 				}
-
 				//add game tree to stack to be processed in the future
 				push(k, *current_gameTree);
 				
@@ -528,15 +529,95 @@ gameTree buildGameDF(gameTree t, stack k, int d)
 */
 void generateLevelBF(gameTree t, queue q)
 {
-	const int HORIZ_MOVES[] = { -2, -1, +1, +2, +2, +1, -1, -2 };	// moves left/right
-	const int VERT_MOVES[] = { -1, -2, -2, -1, +1, +2, +2, +1 };	// moves up/down
+const int HORIZ_MOVES[] = { -2, -1, +1, +2, +2, +1, -1, -2 };	// moves left/right
+	const int VERT_MOVES[] =  { -1, -2, -2, -1, +1, +2, +2, +1 };	// moves up/down
 	const int MOVE_COUNT = 8;										// number of potential moves
 
-	trace("generateLevelBF: generateLevelBF starts");
+	const int START_OF_ARRAY = 0;	//first element of an array
 
-//COMPLETE ME!
+	int cur_r, cur_c;	//current row and current column
+	int new_r, new_c;	//updated to new row and column possibilities
+	int test_move;	//used in for loop to step through possible moves
 
-	trace("generateLevelBF: generateLevelBF ends");
+	gameTree *current_gameTree;
+	gameTree previous_gameTree;
+	gameState parent_gameState, current_gameState;
+	bool no_siblings = true;
+	int new_level;	//updated to be the level of children generated relative to root of tree
+
+	trace("generateLevelBF: generateLevelBF starts");	//for debug purposes only. function in assig_three115.c
+
+	//fetch game state to generate children out of gameTree passed in and generate the level of children
+	parent_gameState = (gameState)(getData(t));
+	new_level = getLevel(t);
+	new_level++;
+
+	//update current row & col to location of knight
+	cur_r = getRow(parent_gameState);
+	cur_c = getColumn(parent_gameState);
+
+	trace("generateLevelBF:showing parent_gameState:");	//for debug purposes only. function in assig_three115.c
+
+	//loop though every possible move
+	for (test_move = START_OF_ARRAY; test_move < MOVE_COUNT; test_move++)
+	{
+		//update new location to where knight could theoretically move (before considering its validity)
+		new_r = cur_r + VERT_MOVES[test_move];
+		new_c = cur_c + HORIZ_MOVES[test_move];
+
+		//test to see if new location is legal & valid
+		if (valid(parent_gameState, new_r, new_c))
+		{
+			//play is on the board
+			trace("generateLevelBF: new location on board");	//for debug purposes only. function in assig_three115.c
+			if (!taken(parent_gameState, new_r, new_c))
+			{
+				//the knight has not visited this location before, thus move is valid and legal
+
+				//derive the new game state based on the gameTree passed in.
+				current_gameState = derive(parent_gameState, new_r, new_c, new_level);
+
+				//create a game tree containing the new game state
+				current_gameTree = malloc(sizeof(gameTree));	//creates new space in memory for pointer
+				init_gameTree(current_gameTree, false, current_gameState, new_level);
+
+				//set parent, sibling & children
+
+				//the new game tree just created parent will always be the game tree passed if
+				setParent(*current_gameTree,t);
+
+				//if this is the first child generated from this parent it is unsure if it will have siblings
+				//given the way this tree works the left most child is the the only child referred to in parents child data field
+				if (no_siblings)
+				{
+					//first child generated
+
+					//set the parents child
+					setChild(t, *current_gameTree);
+
+					no_siblings = false;	//stops future loops from entering this section of code
+				}
+				else
+				{
+					//not the first child generated
+
+					//previous tree generated sibling is the current tree, update to represent this
+					setSibling(previous_gameTree, *current_gameTree);
+				}
+
+
+				//add game tree to queue to be processed in the future
+				add(q, *current_gameTree);
+
+				//change name of current game tree to previous game tree for future loops
+				previous_gameTree = *current_gameTree;
+
+				trace("generateLevelBF:showing new_gameState:");	//for debug purposes only. function in assig_three115.c
+			}
+		}
+	}
+
+	trace("generateLevelBF: generateLevelDF ends");	//for debug purposes only. function in assig_three115.c
 }
 
 
@@ -563,15 +644,52 @@ void generateLevelBF(gameTree t, queue q)
 	*			tree if there is no solution
 */
 gameTree buildGameBF(gameTree t, queue q, int d)
+
 {
-	gameTree c;
+	gameTree c;	//updated through loop to current gameTree to be worked on
 
-	trace("buildGameBF: buildGameBF starts");
+		trace("buildGameDF: buildGameDF starts");	//for debug purposes only. function in assig_three115.c
 
-//COMPLETE ME!
-		
-	trace("buildGameBF: buildGameBF ends");
+		init_gameTree(&c, true, NULL, -1);	//allocate enough memory for c to hold a game tree
+
+		c = t;	//initially work on the game tree passed in
+
+		//so that we dont pop an empty stack add the first tree the stack
+		add(q, t);
+
+		//generate children from the gameTree at the top of the stack then add those children to the stack
+		//continue to do this until either:
+		//			the stack is empty (meaning no more children can be generated (likely no solution can be found))
+		//			enough moves have been generated to find a solution.
+		while ((!(isEmptyQ(q))) && (getLevel(c)<TOUR_LENGTH))
+		{
+
+			//remove last gameTree from top of queue
+			rear(q);
+
+			//generate children and add them to queue
+			generateLevelBF(c, q);
+
+			//update c to equal the front of the queue
+			if (!(isEmptyQ(q)))
+			{
+				c = (gameTree)(front(q));
+			}
+		}
+
+		//check if a solution has been found.
+		if (getLevel(c) < TOUR_LENGTH)
+		{
+			//no solution found so update c to have a NULL data field
+			init_gameTree(&c, true, NULL, -1);
+		}
+
+		trace("buildGameDF: buildGameDF ends");	//for debug purposes only. function in assig_three115.c
+
+		//returns leaf node of tree containing full solution or NULL value if no solution (of type gameTree)
+		return c;
 }
+
 
 
 /*
