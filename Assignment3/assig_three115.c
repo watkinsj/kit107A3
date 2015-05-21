@@ -83,8 +83,8 @@ int main(int argc, char *argv[])
 	
 	// solve
 	init_gameTree(&g, false, s, 1);
-	a = buildGameDF(g, k, TOUR_LENGTH);		// Depth-first
-	//a = buildGameBF(g, q, TOUR_LENGTH);	// Breadth-first
+	//a = buildGameDF(g, k, TOUR_LENGTH);		// Depth-first
+	a = buildGameBF(g, q, TOUR_LENGTH);	// Breadth-first
 
 	// show results
 	if (isEmptyGT(a))
